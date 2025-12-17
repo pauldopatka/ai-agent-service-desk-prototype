@@ -298,7 +298,7 @@ function ChatView() {
 
           <div className="flex justify-between">
             <Button variant="outline" onClick={() => navigate(-1)}>Back</Button>
-            <Button onClick={() => navigate(1)}>Get Draft Solution</Button>
+            <Button onClick={() => setShowSolution(true)}>Get Draft Solution</Button>
             <Button onClick={handleSend}>Send</Button>
           </div>
         </CardContent>
@@ -358,7 +358,7 @@ function NotificationListPopup({ onClose, onOpenOutage, outageConfirmed }: Notif
         <div className="grid gap-3">
           <div className="p-3 border rounded-lg flex justify-between items-center">
             <div>
-              <div className="font-medium text-sm">System Outage (Automatically Detected)</div>
+              <div className="font-medium text-sm">Global Incident(Automatically Detected)</div>
               <div className="text-xs text-gray-500">12:43</div>
             </div>
             <div className="flex items-center gap-2">

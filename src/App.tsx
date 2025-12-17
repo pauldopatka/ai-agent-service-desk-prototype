@@ -56,9 +56,22 @@ const mockTickets = [
 interface HotbarProps {
   onOpenNotifications: () => void;
   onResetDemo: () => void;
+  setShowAutomatedOutage: (value: boolean) => void;
 }
 
-function Hotbar({ onOpenNotifications, onResetDemo }: HotbarProps) {
+function Hotbar({ onOpenNotifications, onResetDemo, setShowAutomatedOutage }: HotbarProps) {
+  useEffect(() => {
+    const confirmed = sessionStorage.getItem("outageConfirmed") === "true";
+
+    if (!confirmed) {
+      const timer = setTimeout(() => {
+        setShowAutomatedOutage(true);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [setShowAutomatedOutage]);
+
   return (
     <div className="w-full bg-white shadow-md px-6 py-3 flex items-center justify-between mb-6">
       <Link to="/" onClick={onResetDemo} className="font-bold text-lg hover:underline">SYSTEMNAME</Link>
@@ -477,6 +490,7 @@ export default function AIConciergePrototype() {
             setOutageConfirmed(false);
             setResetToken((v) => v + 1);
           }}
+          setShowAutomatedOutage={setShowAutomatedOutage}
         />
 
         <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-2xl font-bold text-center mb-6">AI Concierge Prototype</motion.h1>

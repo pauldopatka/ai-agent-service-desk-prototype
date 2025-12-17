@@ -195,13 +195,11 @@ function TicketDetailView() {
 
           <Badge className="w-fit">Ticket</Badge>
           <div className="flex items-center gap-2">
-            <Bot className="w-5 h-5" />
             <h3 className="font-semibold">Incident Summary</h3>
           </div>
           <p className="text-sm text-gray-700">{getAiSummary()}</p>
 
           <div className="flex gap-2 mt-2">
-            <Button variant="outline" onClick={() => setShowSolution(true)}>Get Draft Solution</Button>
             <Button
               variant="outline"
               onClick={() => {
@@ -236,7 +234,9 @@ function ChatView() {
   const navigate = useNavigate();
   const initialMessage = location.state?.initialMessage ?? "";
   const ticketId = location.state?.ticketId as number | undefined;
-
+  const [showSolution, setShowSolution] = useState(false);
+  const ticket = mockTickets.find((t) => t.id === Number(ticketId));
+  const defaultSolution = ticket ? ticket : mockTickets[0];
   const [messages, setMessages] = useState<{
     id: number;
     role: "system" | "user";
@@ -298,10 +298,14 @@ function ChatView() {
 
           <div className="flex justify-between">
             <Button variant="outline" onClick={() => navigate(-1)}>Back</Button>
+            <Button onClick={() => setShowSolution(true)}>Get Draft Solution</Button>
             <Button onClick={handleSend}>Send</Button>
           </div>
         </CardContent>
       </Card>
+      {showSolution && (
+        <SolutionPopup onClose={() => setShowSolution(false)} defaultText={getDefaultSolution(defaultSolution)} />
+      )}
     </motion.div>
   );
 }

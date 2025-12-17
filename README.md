@@ -1,3 +1,7 @@
+#Ai-agent-service-desk-prototype
+
+This is an showcase for the ai-agent-service-desk, that i Have examinend in my Bahcelor Thesis
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

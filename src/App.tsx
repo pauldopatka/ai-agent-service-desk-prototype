@@ -298,7 +298,7 @@ function ChatView() {
 
           <div className="flex justify-between">
             <Button variant="outline" onClick={() => navigate(-1)}>Back</Button>
-            <Button onClick={() => setShowSolution(true)}>Get Draft Solution</Button>
+            <Button onClick={() => navigate(1)}>Get Draft Solution</Button>
             <Button onClick={handleSend}>Send</Button>
           </div>
         </CardContent>
@@ -454,7 +454,7 @@ export default function AIConciergePrototype() {
     if (!confirmed) {
       const timer = setTimeout(() => {
         setShowAutomatedOutage(true);
-      }, 500);
+      }, 5000);
 
       return () => clearTimeout(timer);
     }

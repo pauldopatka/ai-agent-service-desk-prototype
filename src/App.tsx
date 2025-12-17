@@ -190,15 +190,15 @@ function TicketDetailView() {
         <CardContent className="p-6 grid gap-4">
           <div className="flex items-center gap-2">
             <Bot className="w-5 h-5" />
-            <h2 className="font-semibold">AI Summary</h2>
+            <h2 className="font-semibold">AI Services</h2>
           </div>
 
-          <Badge className="w-fit">Proactive Analysis</Badge>
+          <Badge className="w-fit">Ticket</Badge>
 
           <p className="text-sm text-gray-700">{getAiSummary()}</p>
 
           <div className="flex gap-2 mt-2">
-            <Button variant="outline" onClick={() => setShowSolution(true)}>Prepare Solution</Button>
+            <Button variant="outline" onClick={() => setShowSolution(true)}>Get Draft Solution</Button>
             <Button
               variant="outline"
               onClick={() => {
@@ -447,7 +447,7 @@ export default function AIConciergePrototype() {
     if (!confirmed) {
       const timer = setTimeout(() => {
         setShowAutomatedOutage(true);
-      }, 30000);
+      }, 500);
 
       return () => clearTimeout(timer);
     }

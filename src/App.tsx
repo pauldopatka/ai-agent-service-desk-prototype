@@ -311,7 +311,7 @@ function ChatView() {
 
           <div className="flex justify-between">
             <Button variant="outline" onClick={() => navigate(-1)}>Back</Button>
-            <Button onClick={() => setShowSolution(true)}>Get Draft Solution</Button>
+            <Button onClick={() => setShowSolution(true)}>AI Solution</Button>
             <Button onClick={handleSend}>Send</Button>
           </div>
         </CardContent>
@@ -339,7 +339,7 @@ function SettingsView() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-[1200px] mx-auto">
       <Card className="rounded-2xl shadow-md">
         <CardContent className="p-6 grid gap-6">
-          <h2 className="font-semibold text-xl">AI Concierge – Feature Settings</h2>
+          <h2 className="font-semibold text-xl">AI Agent – Feature Settings</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {features.map((feature, idx) => (
               <div key={feature.key} className="flex items-center justify-between p-4 border rounded-lg">
@@ -401,7 +401,7 @@ function AutomatedOutagePopup({ onClose, onConfirm }: AutomatedOutagePopupProps)
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-2xl">
         <h2 className="font-semibold text-lg mb-2 text-red-700 flex items-center gap-2">🔔 System Outage Detected</h2>
-        <p className="text-sm text-gray-700 mb-3">The AI Concierge has detected a potential system outage. Services are currently not responding as expected.</p>
+        <p className="text-sm text-gray-700 mb-3">The AI Agent has detected a potential system outage. Services are currently not responding as expected.</p>
         <p className="text-xs text-gray-500 mb-4">Timestamp: 12:43</p>
         {!sent ? (
           <>
@@ -493,7 +493,7 @@ export default function AIConciergePrototype() {
           setShowAutomatedOutage={setShowAutomatedOutage}
         />
 
-        <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-2xl font-bold text-center mb-6">AI Concierge Prototype</motion.h1>
+        <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-2xl font-bold text-center mb-6">AI Agent Prototype</motion.h1>
 
         <Routes>
           <Route path="/" element={<TicketListView resetToken={resetToken} />} />

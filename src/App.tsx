@@ -194,7 +194,10 @@ function TicketDetailView() {
           </div>
 
           <Badge className="w-fit">Ticket</Badge>
-
+          <div className="flex items-center gap-2">
+            <Bot className="w-5 h-5" />
+            <h3 className="font-semibold">Incident Summary</h3>
+          </div>
           <p className="text-sm text-gray-700">{getAiSummary()}</p>
 
           <div className="flex gap-2 mt-2">
@@ -421,7 +424,7 @@ function SolutionPopup({ onClose, defaultText }: SolutionPopupProps) {
             <textarea className="w-full mt-2 p-2 border rounded-md text-sm" rows={6} value={text} onChange={(e) => setText(e.target.value)} />
             <div className="flex justify-between items-center mt-4">
               <Button variant="outline" onClick={onClose}>Cancel</Button>
-              <Button onClick={() => setSent(true)}>Submit</Button>
+              <Button onClick={() => setSent(true)}>Send Message</Button>
             </div>
           </>
         ) : (

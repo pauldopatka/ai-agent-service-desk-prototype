@@ -219,6 +219,11 @@ function TicketDetailView() {
   };
 
   const defaultSolution = getDefaultSolution(ticket);
+  const handleSubmitRating = (rating: number) => {
+    if (!ticket) return;
+    sessionStorage.setItem(`rating-${ticket.id}`, String(rating));
+  };
+
   const handleCloseTicket = () => {
     if (!ticket) return;
     sessionStorage.setItem(`closed-${ticket.id}`, "true");
@@ -236,7 +241,8 @@ function TicketDetailView() {
           <p className="text-sm text-gray-600 mt-2"><strong>Description:</strong> {ticket.description}</p>
           <div className="flex gap-2 mt-4">
             <Button variant="outline" onClick={() => window.history.back()} className="w-fit">Back to Ticket List</Button>
-            <Button onClick={() => setShowRating(true)} className="w-fit">Rate AI & Close Ticket</Button>
+            <Button onClick={() => setShowRating(true)} className="w-fit">Give Feedback</Button>
+            <Button onClick={handleCloseTicket} className="w-fit">Close Ticket</Button>
           </div>
         </CardContent>
       </Card>
@@ -281,7 +287,7 @@ function TicketDetailView() {
         <SolutionPopup onClose={() => setShowSolution(false)} defaultText={defaultSolution} />
       )}
       {showRating && (
-        <RatingPopup onClose={() => setShowRating(false)} onSubmitClose={handleCloseTicket} />
+        <RatingPopup onClose={() => setShowRating(false)} onSubmitRating={handleSubmitRating} />
       )}
     </motion.div>
   );
@@ -502,10 +508,10 @@ function SolutionPopup({ onClose, defaultText }: SolutionPopupProps) {
 
 interface RatingPopupProps {
   onClose: () => void;
-  onSubmitClose: (rating: number) => void;
+  onSubmitRating: (rating: number) => void;
 }
 
-function RatingPopup({ onClose, onSubmitClose }: RatingPopupProps) {
+function RatingPopup({ onClose, onSubmitRating }: RatingPopupProps) {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [sent, setSent] = useState(false);
@@ -539,12 +545,12 @@ function RatingPopup({ onClose, onSubmitClose }: RatingPopupProps) {
             <div className="text-xs text-gray-500 mt-1">Selected: {rating} / 5</div>
             <div className="flex justify-between items-center mt-5">
               <Button variant="outline" onClick={onClose}>Cancel</Button>
-              <Button onClick={() => { setSent(true); onSubmitClose(rating); }}>Close Ticket</Button>
+              <Button onClick={() => { setSent(true); onSubmitRating(rating); }}>Save Feedback</Button>
             </div>
           </>
         ) : (
           <div className="text-center text-green-700 text-sm font-medium mt-4">
-            ✅ Thank you for your feedback. The ticket is closed.
+            ✅ Thank you for your feedback.
             <div className="mt-4"><Button variant="outline" onClick={onClose}>Close</Button></div>
           </div>
         )}

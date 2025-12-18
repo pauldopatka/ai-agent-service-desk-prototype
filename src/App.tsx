@@ -199,8 +199,28 @@ function TicketDetailView() {
   
 
   const getAiSummary = () => {
-    if (ticket.title.toLowerCase().includes("vpn")) {
-      return "The incident is classified as a VPN-related connectivity issue. Based on similar historical cases, the root cause is likely a corrupted client profile, an expired certificate, or network instability. A profile reset and credential re-authentication resolves the majority of such incidents.";
+    if (ticket.id === 1) {
+      return "The incident is classified as a VPN-related connectivity issue. Based on similar historical cases, the root cause is likely a corrupted client profile, an expired certificate, or network instability. A profile reset and credential re-authentication resolves the majority of such incidents. Related tickets: #5 (VPN Login Timeout), #6 (VPN Random Disconnects), #7 (VPN Profile Missing), #8 (VPN Very Slow), #9 (VPN Certificate Error).";
+    }
+
+    if (ticket.id === 5) {
+      return "VPN login timeout detected. This appears to be part of a broader VPN infrastructure issue affecting multiple users. The authentication service may be overloaded or experiencing latency. Related tickets: #1 (VPN Issue), #6 (VPN Random Disconnects), #7 (VPN Profile Missing), #8 (VPN Very Slow), #9 (VPN Certificate Error).";
+    }
+
+    if (ticket.id === 6) {
+      return "VPN connection instability with frequent disconnects. Network analysis suggests this is connected to the ongoing VPN service degradation. Gateway routing or load balancer issues are probable causes. Related tickets: #1 (VPN Issue), #5 (VPN Login Timeout), #7 (VPN Profile Missing), #8 (VPN Very Slow), #9 (VPN Certificate Error).";
+    }
+
+    if (ticket.id === 7) {
+      return "VPN profile configuration missing after client update. This is likely caused by a failed migration during the recent VPN client upgrade. Profile restoration from backup recommended. Related tickets: #1 (VPN Issue), #5 (VPN Login Timeout), #6 (VPN Random Disconnects), #8 (VPN Very Slow), #9 (VPN Certificate Error).";
+    }
+
+    if (ticket.id === 8) {
+      return "VPN connection established but experiencing severe performance degradation. Bandwidth throttling or routing inefficiencies detected. This correlates with the current VPN infrastructure incident. Related tickets: #1 (VPN Issue), #5 (VPN Login Timeout), #6 (VPN Random Disconnects), #7 (VPN Profile Missing), #9 (VPN Certificate Error).";
+    }
+
+    if (ticket.id === 9) {
+      return "VPN certificate validation failure. The SSL/TLS certificate chain appears to be broken or expired. This is a critical security component affecting the overall VPN service reliability. Related tickets: #1 (VPN Issue), #5 (VPN Login Timeout), #6 (VPN Random Disconnects), #7 (VPN Profile Missing), #8 (VPN Very Slow).";
     }
 
     if (ticket.title.toLowerCase().includes("mail")) {

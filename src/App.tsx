@@ -42,15 +42,15 @@ function Switch({ checked, onCheckedChange }: { checked: boolean; onCheckedChang
 }
 
 const mockTickets = [
-  { id: 1, title: "VPN Issue", name: "User 1", date: "2025-12-01", description: "VPN connection fails on startup.", severity: "Critical" },
-  { id: 2, title: "Mail Sync", name: "User 2", date: "2025-12-02", description: "Outlook does not sync correctly.", severity: "Warning" },
-  { id: 3, title: "Printer Error", name: "User 3", date: "2025-12-03", description: "Office printer shows error 404.", severity: "Info" },
-  { id: 4, title: "Access Rights", name: "User 4", date: "2025-12-04", description: "No access to shared drive.", severity: "Info" },
-  { id: 5, title: "VPN Login Timeout", name: "User 5", date: "2025-12-05", description: "VPN login times out after entering credentials.", severity: "Critical" },
-  { id: 6, title: "VPN Random Disconnects", name: "User 6", date: "2025-12-05", description: "VPN disconnects every few minutes.", severity: "Warning" },
-  { id: 7, title: "VPN Profile Missing", name: "User 7", date: "2025-12-06", description: "VPN profile disappeared after client update.", severity: "Critical" },
-  { id: 8, title: "VPN Very Slow", name: "User 8", date: "2025-12-06", description: "VPN connection is established but extremely slow.", severity: "Warning" },
-  { id: 9, title: "VPN Certificate Error", name: "User 9", date: "2025-12-07", description: "VPN client reports an invalid certificate error.", severity: "Critical" }
+  { id: 1, title: "VPN Issue", name: "User 1", date: "2025-12-01", description: "VPN connection fails on startup.", severity: "Critical", closed: false },
+  { id: 2, title: "Mail Sync", name: "User 2", date: "2025-12-02", description: "Outlook does not sync correctly.", severity: "Warning", closed: false },
+  { id: 3, title: "Printer Error", name: "User 3", date: "2025-12-03", description: "Office printer shows error 404.", severity: "Info", closed: true },
+  { id: 4, title: "Access Rights", name: "User 4", date: "2025-12-04", description: "No access to shared drive.", severity: "Info", closed: true },
+  { id: 5, title: "VPN Login Timeout", name: "User 5", date: "2025-12-05", description: "VPN login times out after entering credentials.", severity: "Critical", closed: false },
+  { id: 6, title: "VPN Random Disconnects", name: "User 6", date: "2025-12-05", description: "VPN disconnects every few minutes.", severity: "Warning", closed: false },
+  { id: 7, title: "VPN Profile Missing", name: "User 7", date: "2025-12-06", description: "VPN profile disappeared after client update.", severity: "Critical", closed: false },
+  { id: 8, title: "VPN Very Slow", name: "User 8", date: "2025-12-06", description: "VPN connection is established but extremely slow.", severity: "Warning", closed: false },
+  { id: 9, title: "VPN Certificate Error", name: "User 9", date: "2025-12-07", description: "VPN client reports an invalid certificate error.", severity: "Critical", closed: false }
 ];
 
 interface HotbarProps {
@@ -102,6 +102,12 @@ function TicketListView({ resetToken }: { resetToken: number }) {
   }, [resetToken]);
 
   const navigate = useNavigate();
+  const isClosed = (t: typeof mockTickets[number]) => {
+    const s = sessionStorage.getItem(`closed-${t.id}`);
+    return s === "true" || t.closed === true;
+  };
+  const openTickets = mockTickets.filter((t) => !isClosed(t));
+  const closedTickets = mockTickets.filter((t) => isClosed(t));
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-[1400px] mx-auto grid grid-cols-12 gap-6">
@@ -109,7 +115,7 @@ function TicketListView({ resetToken }: { resetToken: number }) {
         <CardContent className="p-6">
           <h2 className="font-semibold mb-4">Tickets</h2>
           <div className="grid gap-2">
-            {mockTickets.map((ticket) => {
+            {openTickets.map((ticket) => {
               const hasUnread = sessionStorage.getItem(`unread-${ticket.id}`) === "true";
 
               return (
@@ -136,6 +142,32 @@ function TicketListView({ resetToken }: { resetToken: number }) {
           </div>
         </CardContent>
       </Card>
+
+      <Card className="rounded-2xl shadow-md col-span-12">
+        <CardContent className="p-6">
+          <h2 className="font-semibold mb-4">Closed Tickets</h2>
+          <div className="grid gap-2">
+            {closedTickets.map((ticket) => (
+              <div
+                key={ticket.id}
+                onClick={() => navigate(`/ticket/${ticket.id}`)}
+                className="p-3 rounded-lg cursor-pointer border text-sm transition bg-gray-50 hover:bg-gray-100 flex justify-between items-center"
+              >
+                <div>
+                  <div className="font-medium flex items-center gap-2">
+                    {ticket.title}
+                    <span className="text-xs px-2 py-0.5 rounded-full border bg-gray-100 text-gray-700">Closed</span>
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    {ticket.name} – {ticket.date}
+                  </div>
+                </div>
+                <Badge>{ticket.severity}</Badge>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </motion.div>
   );
 }
@@ -158,6 +190,7 @@ function TicketDetailView() {
   const navigate = useNavigate();
   const ticket = mockTickets.find((t) => t.id === Number(id));
   const [showSolution, setShowSolution] = useState(false);
+  const [showRating, setShowRating] = useState(false);
 
   if (!ticket) {
     return <div className="text-center text-gray-500">Ticket not found.</div>;
@@ -186,6 +219,12 @@ function TicketDetailView() {
   };
 
   const defaultSolution = getDefaultSolution(ticket);
+  const handleCloseTicket = () => {
+    if (!ticket) return;
+    sessionStorage.setItem(`closed-${ticket.id}`, "true");
+    setShowRating(false);
+    navigate("/");
+  };
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-12 gap-8 max-w-[1400px] mx-auto">
@@ -195,7 +234,10 @@ function TicketDetailView() {
           <p><strong>Name:</strong> {ticket.name}</p>
           <p><strong>Date:</strong> {ticket.date}</p>
           <p className="text-sm text-gray-600 mt-2"><strong>Description:</strong> {ticket.description}</p>
-          <Button variant="outline" onClick={() => window.history.back()} className="w-fit mt-4">Back to Ticket List</Button>
+          <div className="flex gap-2 mt-4">
+            <Button variant="outline" onClick={() => window.history.back()} className="w-fit">Back to Ticket List</Button>
+            <Button onClick={() => setShowRating(true)} className="w-fit">Rate AI & Close Ticket</Button>
+          </div>
         </CardContent>
       </Card>
 
@@ -237,6 +279,9 @@ function TicketDetailView() {
 
       {showSolution && (
         <SolutionPopup onClose={() => setShowSolution(false)} defaultText={defaultSolution} />
+      )}
+      {showRating && (
+        <RatingPopup onClose={() => setShowRating(false)} onSubmitClose={handleCloseTicket} />
       )}
     </motion.div>
   );
@@ -447,6 +492,59 @@ function SolutionPopup({ onClose, defaultText }: SolutionPopupProps) {
         ) : (
           <div className="text-center text-green-700 text-sm font-medium mt-4">
             ✅ Solution prepared and submitted.
+            <div className="mt-4"><Button variant="outline" onClick={onClose}>Close</Button></div>
+          </div>
+        )}
+      </motion.div>
+    </div>
+  );
+}
+
+interface RatingPopupProps {
+  onClose: () => void;
+  onSubmitClose: (rating: number) => void;
+}
+
+function RatingPopup({ onClose, onSubmitClose }: RatingPopupProps) {
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [sent, setSent] = useState(false);
+
+  const stars = [1, 2, 3, 4, 5];
+
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-2xl">
+        <h2 className="font-semibold text-lg mb-2 flex items-center gap-2">⭐ Rate AI Assistance</h2>
+        {!sent ? (
+          <>
+            <p className="text-sm text-gray-700">Please rate the AI interaction before closing the ticket.</p>
+            <div className="flex items-center gap-2 mt-3">
+              {stars.map((s) => {
+                const active = (hover || rating) >= s;
+                return (
+                  <button
+                    key={s}
+                    className={`text-2xl transition ${active ? "text-yellow-500" : "text-gray-300"}`}
+                    onMouseEnter={() => setHover(s)}
+                    onMouseLeave={() => setHover(0)}
+                    onClick={() => setRating(s)}
+                    aria-label={`Rate ${s} star${s > 1 ? "s" : ""}`}
+                  >
+                    {active ? "★" : "☆"}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="text-xs text-gray-500 mt-1">Selected: {rating} / 5</div>
+            <div className="flex justify-between items-center mt-5">
+              <Button variant="outline" onClick={onClose}>Cancel</Button>
+              <Button onClick={() => { setSent(true); onSubmitClose(rating); }}>Close Ticket</Button>
+            </div>
+          </>
+        ) : (
+          <div className="text-center text-green-700 text-sm font-medium mt-4">
+            ✅ Thank you for your feedback. The ticket is closed.
             <div className="mt-4"><Button variant="outline" onClick={onClose}>Close</Button></div>
           </div>
         )}

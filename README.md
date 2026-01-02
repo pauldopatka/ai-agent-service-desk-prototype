@@ -3,6 +3,27 @@
 This is an showcase for the ai-agent-service-desk, that i Have examinend in my Bahcelor Thesis.
 
 You can reach the website through this [link](https://ai-agent-service-desk-prototype.vercel.app)
+
+## How to run the application
+
+### Prerequisites
+- Node.js (LTS recommended)
+- npm (comes with Node)
+
+### Installation
+
+Install dependencies:
+
+~npm install
+
+Run the app in development mode:
+~npm run dev
+
+
+
+
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
